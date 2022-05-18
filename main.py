@@ -5,13 +5,28 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QImage, QPalette, QBrush
 from os import environ
-#from stylesheet import  stylesheet
-from qt_material import apply_stylesheet
+from stylesheet import  stylesheet,accentColor
+import db_controller
+#from qt_material import apply_stylesheet
 
-from win32api import GetSystemMetrics
+""" from win32api import GetSystemMetrics
 
 WIDTH= GetSystemMetrics(0)
-HEIGHT= GetSystemMetrics(1)
+HEIGHT= GetSystemMetrics(1) """
+
+from sys import platform
+if platform == "linux" or platform == "linux2":
+    HEIGHT=768
+    WIDTH=1366
+    # linux
+elif platform == "darwin":
+    pass
+    # OS X
+elif platform == "win32":
+    pass
+        # Windows...
+
+
 
 
 def suppress_qt_warnings():
@@ -31,7 +46,8 @@ def dialog():
 
 def startProgram():
     app = QApplication(sys.argv)
-    apply_stylesheet(app, theme='dark_amber.xml',invert_secondary=True)
+    app.setStyleSheet(stylesheet)
+    #apply_stylesheet(app, theme='dark_amber.xml',invert_secondary=True)
     
     appWindow = QWidget()
     appWindow.resize(WIDTH,HEIGHT)
@@ -61,23 +77,25 @@ def startProgram():
     #frame.setStyleSheet("border-image: url(bg.jpg) 0 0 0 0 stretch stretch;  background-attachment: fixed;background-repeat: no-repeat;  background-position: center;")
     #vbox = QVBoxLayout(frame)
     #layout = QGridLayout()
-    
-    for i in range(5):
+    allTasks=db_controller.fetchTasks()
+
+    for index,task in enumerate(allTasks):
         
         tmpLabel = QLabel(frame)
-        tmpLabel.setText('hello'+str(i))
+        tmpLabel.setText(task['task'])
         tmpLabel.setFixedHeight(40)
-        tmpLabel.setFixedWidth(500)
-        tmpLabel.setStyleSheet("padding :10px")
+        tmpLabel.setFixedWidth(WIDTH-500)
+        tmpLabel.setStyleSheet(f"padding :10px;color:black;border:1 solid {accentColor};")
         tmpLabel.setAlignment(QtCore.Qt.AlignLeft)
-        tmpLabel.move(50,50+i*60)
+        tmpLabel.move(50,50+index*60)
         
 
     #appWindow.setLayout(vbox)
     #vbox.setSpacing(0)
-    button = QPushButton('PyQt5 button', frame)
-    button.setToolTip('This is an example button')
-    button.move(frame.frameGeometry().width()-200,frame.frameGeometry().height()-200)
+    button = QPushButton('Add task', frame)
+    #button.setToolTip('This is an example button')
+    button.move(frame.frameGeometry().width()-1050,frame.frameGeometry().height()-200)
+    button.setStyleSheet(f"padding :10px;color:black;border:1 solid {accentColor};")
     appWindow.show()
     sys.exit(app.exec_())
   
