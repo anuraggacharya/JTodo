@@ -78,7 +78,7 @@ def startProgram():
     #vbox = QVBoxLayout(frame)
     #layout = QGridLayout()
     allTasks=db_controller.fetchTasks()
-
+    #add connector for mongo db
     for index,task in enumerate(allTasks):
         
         tmpLabel = QLabel(frame)
